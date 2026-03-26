@@ -1,0 +1,210 @@
+
+MariaDB [(none)]> CREATE DATABASE Library_Management;
+Query OK, 1 row affected (0.002 sec)
+
+MariaDB [(none)]> Use LIBRARY_MANAGEMENT;
+Database changed
+MariaDB [LIBRARY_MANAGEMENT]> CREATE TABLE Staff(
+    -> staff_id INT PRIMARY KEY,
+    -> name VARCHAR(50)
+    -> );
+Query OK, 0 rows affected (0.026 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> CREATE TABLE Readers(
+    -> user_id INT PRIMARY KEY,
+    -> firstname VARCHAR(30),
+    -> lastname VARCHAR(30),
+    -> email VARCHAR(50),
+    -> phone_no VARCHAR(15),
+    -> address VARCHAR(100)
+    -> );
+Query OK, 0 rows affected (0.018 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> CREATE TABLE Books(
+    -> ISBN INT PRIMARY KEY,
+    -> title VARCHAR(100),
+    -> category VARCHAR(50),
+    -> edition VARCHAR(20),
+    -> price DECIMAL(10,2),
+    -> authNo INT
+    -> );
+Query OK, 0 rows affected (0.026 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> CREATE TABLE Publisher(
+    -> publisher_id INT PRIMARY KEY,
+    -> name VARCHAR(50),
+    -> yearOfPublication YEAR
+    -> );
+Query OK, 0 rows affected (0.028 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> CREATE TABLE Reports(
+    -> reg_no INT PRIMARY KEY,
+    -> user_id INT,
+    -> book_no INT,
+    -> issue_return VARCHAR(20)
+    -> );
+Query OK, 0 rows affected (0.029 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> CREATE TABLE Authentication(
+    -> loginID VARCHAR(50) PRIMARY KEY,
+    -> password VARCHAR(50)
+    -> );
+Query OK, 0 rows affected (0.029 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> CREATE TABLE Reserve(
+    -> reserve_id INT PRIMARY KEY AUTO_INCREMENT,
+    -> user_id INT,
+    -> ISBN INT,
+    -> reserveDate DATE,
+    -> due_date DATE,
+    -> return_date DATE
+    -> );
+Query OK, 0 rows affected (0.027 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> INSERT INTO Staff VALUES(1,'Amit');
+Query OK, 1 row affected (0.062 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> INSERT INTO Staff VALUES(2,'Rahul');
+Query OK, 1 row affected (0.012 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> INSERT INTO Readers VALUES(101,'Aman','Raj','aman@gmail.com','9876543210','Delhi');
+Query OK, 1 row affected (0.005 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> INSERT INTO Readers VALUES(102,'Rohit','Sharma','rohit@gmail.com','9999999999','Mumbai');
+Query OK, 1 row affected (0.013 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> INSERT INTO Books VALUES(1001,'Database Systems','Education','3rd',500,11);
+Query OK, 1 row affected (0.015 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> INSERT INTO Books VALUES(1002,'Python Programming','Education','2nd',450,12);
+Query OK, 1 row affected (0.014 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> INSERT INTO Publisher VALUES(1,'McGraw Hill',2020);
+Query OK, 1 row affected (0.015 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> INSERT INTO Publisher VALUES(2,'Pearson',2022);
+Query OK, 1 row affected (0.014 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> INSERT INTO Authentication VALUES('admin','1234');
+Query OK, 1 row affected (0.007 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> INSERT INTO Reserve(user_id,ISBN,reserveDate,due_date)
+    -> VALUES(101,1001,'2026-03-01','2026-03-10');
+Query OK, 1 row affected (0.016 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> SELECT * FROM Books;
++------+--------------------+-----------+---------+--------+--------+
+| ISBN | title              | category  | edition | price  | authNo |
++------+--------------------+-----------+---------+--------+--------+
+| 1001 | Database Systems   | Education | 3rd     | 500.00 |     11 |
+| 1002 | Python Programming | Education | 2nd     | 450.00 |     12 |
++------+--------------------+-----------+---------+--------+--------+
+2 rows in set (0.001 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> SELECT * FROM Readers;
++---------+-----------+----------+-----------------+------------+---------+
+| user_id | firstname | lastname | email           | phone_no   | address |
++---------+-----------+----------+-----------------+------------+---------+
+|     101 | Aman      | Raj      | aman@gmail.com  | 9876543210 | Delhi   |
+|     102 | Rohit     | Sharma   | rohit@gmail.com | 9999999999 | Mumbai  |
++---------+-----------+----------+-----------------+------------+---------+
+2 rows in set (0.001 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> SELECT title, price FROM Books;
++--------------------+--------+
+| title              | price  |
++--------------------+--------+
+| Database Systems   | 500.00 |
+| Python Programming | 450.00 |
++--------------------+--------+
+2 rows in set (0.001 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> SELECT * FROM Books WHERE price > 400;
++------+--------------------+-----------+---------+--------+--------+
+| ISBN | title              | category  | edition | price  | authNo |
++------+--------------------+-----------+---------+--------+--------+
+| 1001 | Database Systems   | Education | 3rd     | 500.00 |     11 |
+| 1002 | Python Programming | Education | 2nd     | 450.00 |     12 |
++------+--------------------+-----------+---------+--------+--------+
+2 rows in set (0.001 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> SELECT COUNT(*) FROM Books;
++----------+
+| COUNT(*) |
++----------+
+|        2 |
++----------+
+1 row in set (0.001 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> SELECT MAX(price) FROM Books;
++------------+
+| MAX(price) |
++------------+
+|     500.00 |
++------------+
+1 row in set (0.001 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> SELECT MIN(price) FROM Books;
++------------+
+| MIN(price) |
++------------+
+|     450.00 |
++------------+
+1 row in set (0.001 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> SELECT AVG(price) FROM Books;
++------------+
+| AVG(price) |
++------------+
+| 475.000000 |
++------------+
+1 row in set (0.001 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> SELECT * FROM Reserve WHERE return_date IS NULL;
++------------+---------+------+-------------+------------+-------------+
+| reserve_id | user_id | ISBN | reserveDate | due_date   | return_date |
++------------+---------+------+-------------+------------+-------------+
+|          1 |     101 | 1001 | 2026-03-01  | 2026-03-10 | NULL        |
++------------+---------+------+-------------+------------+-------------+
+1 row in set (0.001 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> UPDATE Books
+    -> SET price = 550
+    -> WHERE ISBN = 1001;
+Query OK, 1 row affected (0.014 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [LIBRARY_MANAGEMENT]> UPDATE Readers
+    -> SET address = 'Patna'
+    -> WHERE user_id = 101;
+Query OK, 1 row affected (0.014 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [LIBRARY_MANAGEMENT]> UPDATE Reserve
+    -> SET return_date = '2026-03-08'
+    -> WHERE reserve_id = 1;
+Query OK, 1 row affected (0.004 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [LIBRARY_MANAGEMENT]> DELETE FROM Books
+    -> WHERE ISBN = 1002;
+Query OK, 1 row affected (0.004 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> DELETE FROM Readers
+    -> WHERE user_id = 102;
+Query OK, 1 row affected (0.013 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]> ALTER TABLE Books
+    -> ADD language VARCHAR(30);
+Query OK, 0 rows affected (0.022 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [LIBRARY_MANAGEMENT]> ALTER TABLE Readers
+    -> ADD gender VARCHAR(10);
+Query OK, 0 rows affected (0.011 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [LIBRARY_MANAGEMENT]> DROP TABLE Reports;
+Query OK, 0 rows affected (0.026 sec)
+
+MariaDB [LIBRARY_MANAGEMENT]>
